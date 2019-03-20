@@ -30,35 +30,58 @@ $('#design').on('change', function() {
     $('#color option[value="gold"]').show();
   }
 });
-/*
-const $earlyWorkshops = $('label input:odd');
-const $lateWorkshops = $('label input:even').slice(1);
+
+const $jsFrameworks = $('input[name="js-frameworks"]');
+const $express = $('input[name="express"]');
+const $jsLibs = $('input[name="js-libs"]');
+const $node = $('input[name="node"]');
+
+
+const $checkbox = $('label input');
 
 $('label input').on('change', function(e) {
-  $earlyWorkshops.each(function(i) {
-    if($earlyWorkshops.eq(i).prop('checked')) {
-      $earlyWorkshops.not($earlyWorkshops.eq(i)).hide();
-      $earlyWorkshops.not($earlyWorkshops.eq(i)).parent().hide();
-    }
-    if($earlyWorkshops.eq(i).not(prop('checked'))) {
-      $earlyWorkshops.show();
+  if ($jsFrameworks.prop('checked')) {
+    $express.attr('disabled', true);
+  } else {
+    $express.removeAttr('disabled');
+  }
+  if ($express.prop('checked')) {
+    $jsFrameworks.attr('disabled', true);
+  } else {
+    $jsFrameworks.removeAttr('disabled');
+  }
+  if ($jsLibs.prop('checked')) {
+    $node.attr('disabled', true);
+  } else {
+    $node.removeAttr('disabled');
+  }
+  if ($node.prop('checked')) {
+    $jsLibs.attr('disabled', true);
 
-    }
-  })
-});
-*/
+  } else {
+    $jsLibs.removeAttr('disabled');
+  }
+  $totalCost.show().val(dollarTotal);
+
 /*
-$('#design').on('change', function() {
-  if($("#design").val() === "js puns") {
-    $('#color option[value="tomato"]').hide();
-    $('#color option[value="steelblue"]').hide();
-    $('#color option[value="dimgrey"]').hide();
-  }
-  if ($("#design").val() === "heart js") {
-    $('#color option[value="cornflowerblue"]').hide();
-    $('#color option[value="darkslategrey"]').hide();
-    $('#color option[value="gold"]').hide();
-  }
-
+  $checkbox.each($checkbox, function () {
+    if (this.checked) {
+      dollarTotal += 100;
+    }
+  });*/
 });
-*/
+
+
+let dollarTotal = 0;
+
+for (var i = 0; i < $('label input:checked').length; i++) {
+  if ($('label input:checked')[i] === $('label input')[0]) {
+    dollarTotal += 200;
+    console.log("Main is checked")
+  } else {
+    dollarTotal += 100;
+  }
+}
+//adds event cost and tallies total cost of the events selected
+const $totalCost = $('<h3>Total: $' + dollarTotal + '</h3>');
+$('.activities').append($totalCost);
