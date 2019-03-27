@@ -38,50 +38,103 @@ const $node = $('input[name="node"]');
 
 
 const $checkbox = $('label input');
+let $dollarTotal = 0;
+const $totalCost = $('<h3>Total: $' + $dollarTotal + '</h3>');
+$('.activities').append($totalCost);
 
-$('label input').on('change', function(e) {
-  if ($jsFrameworks.prop('checked')) {
-    $express.attr('disabled', true);
-  } else {
-    $express.removeAttr('disabled');
-  }
-  if ($express.prop('checked')) {
-    $jsFrameworks.attr('disabled', true);
-  } else {
-    $jsFrameworks.removeAttr('disabled');
-  }
-  if ($jsLibs.prop('checked')) {
-    $node.attr('disabled', true);
-  } else {
-    $node.removeAttr('disabled');
-  }
-  if ($node.prop('checked')) {
-    $jsLibs.attr('disabled', true);
 
-  } else {
-    $jsLibs.removeAttr('disabled');
-  }
-  $totalCost.show().val(dollarTotal);
+$checkbox.on('change', function(event) {
 
-/*
-  $checkbox.each($checkbox, function () {
-    if (this.checked) {
-      dollarTotal += 100;
+  if ($(event.target).is(':checked')) {
+    if ($(event.target).parent().text().indexOf('Tuesday') >= 0) {
+
+      //checks for conflicting events on Tuesday at 9am-12pm time slot
+      if ($(event.target).parent().text().indexOf('9am') >= 0) {
+        $checkbox.each(function(index, element){
+          if ($(element).parent().text().indexOf('Tuesday 9am-12pm') >= 0) {
+            $(element).attr('disabled', true);
+            $(event.target).removeAttr('disabled');
+          }
+        });
+      }
+
+      //checks for conflicting events on Tuesday at 1-4pm time slot
+      if ($(event.target).parent().text().indexOf('1pm') >= 0) {
+        $checkbox.each(function(index, element){
+          if ($(element).parent().text().indexOf('Tuesday 1pm-4pm') >= 0) {
+            $(element).attr('disabled', true);
+            $(event.target).removeAttr('disabled');
+          }
+        });
+      }
     }
-  });*/
+
+      //Addes to the dollar total based on the value of the event
+      if ($(event.target).parent().text().indexOf('Main') >= 0) {
+        $dollarTotal += 200
+      } else {
+        $dollarTotal += 100;
+      }
+    $totalCost.html('<h3>Total: $' + $dollarTotal + '</h3>');
+  }
+
+  //If a box is unchecked
+  if ($(event.target).is(':checked')==false) {
+    if ($(event.target).parent().text().indexOf('Tuesday') >= 0) {
+
+      //re-enables events on Tuesday at 9am-12pm
+      if ($(event.target).parent().text().indexOf('9am') >= 0) {
+        $checkbox.each(function(index, element){
+          if ($(element).parent().text().indexOf('Tuesday 9am-12pm') >= 0) {
+            $(element).removeAttr('disabled');
+          }
+        });
+      }
+
+      //re-enables events on Tuesday at 1-4pm
+      if ($(event.target).parent().text().indexOf('1pm') >= 0) {
+        $checkbox.each(function(index, element){
+          if ($(element).parent().text().indexOf('Tuesday 1pm-4pm') >= 0) {
+            $(element).removeAttr('disabled');
+          }
+        });
+      }
+    }
+
+    //subtracts from the dollar total depending on event upon unchecking
+    if ($(event.target).parent().text().indexOf('Main') >= 0) {
+      $dollarTotal -= 200
+    } else {
+      $dollarTotal -= 100;
+    }
+    $totalCost.html('<h3>Total: $' + $dollarTotal + '</h3>');
+  }
+
 });
 
-
-let dollarTotal = 0;
-
-for (var i = 0; i < $('label input:checked').length; i++) {
-  if ($('label input:checked')[i] === $('label input')[0]) {
-    dollarTotal += 200;
-    console.log("Main is checked")
-  } else {
-    dollarTotal += 100;
-  }
-}
+/*
 //adds event cost and tallies total cost of the events selected
 const $totalCost = $('<h3>Total: $' + dollarTotal + '</h3>');
 $('.activities').append($totalCost);
+
+
+const $selectpayment = $('#payment option[value="select_method"]');
+const $creditCard = $("#credit-card");
+const $paypal = $("#credit-card").next();
+const $bitcoin = $("#credit-card").next().next();
+$paypal.hide();
+$bitcoin.hide();
+
+$('#payment').on('select', function() {
+  $selectpayment.setAttribute('disabled', true);
+  if ($('#payment option[value="credit card"]').prop('selected')) {
+    $creditCard.show();
+  }
+  if ($('#payment option[value="paypal"]').prop('selected')) {
+    $paypal.show();
+  }
+  if ($('#payment option[value="bitcoin"]:selected')) {
+    $bitcoin.show();
+  }
+});
+*/
