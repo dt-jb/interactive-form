@@ -112,29 +112,29 @@ $checkbox.on('change', function(event) {
 
 });
 
-/*
-//adds event cost and tallies total cost of the events selected
-const $totalCost = $('<h3>Total: $' + dollarTotal + '</h3>');
-$('.activities').append($totalCost);
 
-
+//shows payment info based on selection, and hides those not selected
 const $selectpayment = $('#payment option[value="select_method"]');
 const $creditCard = $("#credit-card");
 const $paypal = $("#credit-card").next();
 const $bitcoin = $("#credit-card").next().next();
+const $paymentOptions = $('#payment option');
 $paypal.hide();
 $bitcoin.hide();
 
-$('#payment').on('select', function() {
-  $selectpayment.setAttribute('disabled', true);
-  if ($('#payment option[value="credit card"]').prop('selected')) {
+$('#payment').on('change', function(event) {
+  $selectpayment.attr('disabled', true);
+  if ($('#payment option[value="credit card"]').is(':selected')) {
     $creditCard.show();
-  }
-  if ($('#payment option[value="paypal"]').prop('selected')) {
+    $paypal.hide();
+    $bitcoin.hide();
+  } else if ($('#payment option[value="paypal"]').is(':selected')) {
     $paypal.show();
-  }
-  if ($('#payment option[value="bitcoin"]:selected')) {
+    $bitcoin.hide();
+    $creditCard.hide();
+  } else if ($('#payment option[value="bitcoin"]').is(':selected')) {
     $bitcoin.show();
+    $paypal.hide();
+    $creditCard.hide();
   }
 });
-*/
