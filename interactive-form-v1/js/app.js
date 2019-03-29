@@ -138,3 +138,268 @@ $('#payment').on('change', function(event) {
     $creditCard.hide();
   }
 });
+
+
+//  VALIDATION SECTION
+
+const nameReg = /^[A-Za-z \-\']+$/i;
+const emailReg = /^[^@.]+@[\w]+\.[a-z]{2,4}$/i;
+const ccReg = /^[0-9]{13,16}$/;
+const zipReg = /^[0-9]{5}$/;
+const cvvReg = /^[0-9]{3}$/;
+
+const $name = $('#name');
+const $email = $('#mail');
+const $cc = $("#cc-num");
+const $zip = $('#zip');
+const $cvv = $('#cvv');
+
+//functionality currently being carried out in individual input fields below
+function validStyle (valid, input) {
+  if (!valid || input.val() == "") {
+    input.css('border-color', 'red');
+  } else {
+    input.css('border-color', '');
+  }
+}
+
+//functionality currently being carried out in individual input fields below
+function preventSub(validator) {
+  $('form').submit(function(event) {
+    if (!validator) {
+      event.preventDefault();
+    }
+    else {
+      return true;
+    }
+  });
+};
+
+$('button').click(function(event) {
+  if ($('label input:checked').length === 0
+    || $('#name').val()===''
+    || $('#mail').val()==='') {
+    event.preventDefault();
+    alert('Please ensure that you have checked at least one activity box and entered a valid name and email address.');
+  } else {
+    return true;
+  }
+});
+
+$('button').click(function(event) {
+  if ($('#payment option[value="select_method"]').is(':selected')) {
+    event.preventDefault();
+    alert('Please ensure that you have selected a payment method.');
+  } else {
+    return true;
+  }
+});
+
+//Form validation
+let $nameValid = false;
+$('#name').on('input', function () {
+  $nameValid = nameReg.test($('#name').val());
+  // test Code (replaces validStyle() call)
+  if (!$nameValid|| $('#name').val() == "") {
+    $('#name').css('border-color', 'red');
+  } else {
+    $('#name').css('border-color', '');
+  }
+  // test Code (replaces preventSub() call)
+  $('form').submit(function(event) {
+    if (!$nameValid) {
+      event.preventDefault();
+    }
+    else {
+      return true;
+    }
+  });
+
+  //validStyle($nameValid, $('#name'));
+  //preventSub($nameValid);
+});
+
+let $emailValid = false;
+$('#mail').on('input', function () {
+  $emailValid = emailReg.test($('#mail').val());
+  // test Code (replaces validStyle() call)
+  if (!$emailValid|| $('#mail').val() == "") {
+    $('#mail').css('border-color', 'red');
+  } else {
+    $('#mail').css('border-color', '');
+  }
+  // test Code (replaces preventSub() call)
+  $('form').submit(function(event) {
+    if (!$emailValid) {
+      event.preventDefault();
+    }
+    else {
+      return true;
+    }
+  });
+
+  //validStyle($emailValid, $('#mail'));
+  //preventSub($emailValid);
+});
+
+let $activitiesValid = false;
+$('label input').on('input', function () {
+  if ($('label input:checked').length === 0) {
+    $('.activities').css('background-color', 'red');
+  } else {
+    $('.activities').css('background-color', '');
+    $activitiesValid = true;
+  }
+  preventSub($activitiesValid);
+});
+
+let $ccValid = false;
+$('#cc-num').on('input', function () {
+  if ($('#payment option[value="credit card"]').is(':selected')) {
+    $ccValid = ccReg.test($('#cc-num').val());
+    // test Code (replaces validStyle() call)
+    if (!$ccValid|| $('#cc-num').val() == "") {
+      $('#cc-num').css('border-color', 'red');
+    } else {
+      $('#cc-num').css('border-color', '');
+    }
+    // test Code (replaces preventSub() call)
+    $('form').submit(function(event) {
+      if (!$ccValid) {
+        event.preventDefault();
+      }
+      else {
+        return true;
+      }
+    });
+    //validStyle($ccValid, $('#cc-num'));
+    //preventSub($ccValid);
+  }
+  else {
+    alert('Please select payment method');
+  }
+});
+//validates zipcode
+let $zipValid = false;
+$('#zip').on('input', function () {
+  if ($('#payment option[value="credit card"]').is(':selected')) {
+    $zipValid = zipReg.test($('#zip').val());
+    // test Code (replaces validStyle() call)
+    if (!$zipValid|| $('#zip').val() == "") {
+      $('#zip').css('border-color', 'red');
+    } else {
+      $('#zip').css('border-color', '');
+    }
+    // test Code (replaces preventSub() call)
+    $('form').submit(function(event) {
+      if (!$zipValid) {
+        event.preventDefault();
+      }
+      else {
+        return true;
+      }
+    });
+    //validStyle($zipValid, $('#zip'));
+    //preventSub($zipValid);
+  } else {
+      alert('Please select payment method');
+  }
+});
+//validates cvv
+let $cvvValid = false;
+$('#cvv').on('input', function () {
+  if ($('#payment option[value="credit card"]').is(':selected')) {
+    $cvvValid = cvvReg.test($('#cvv').val());
+    // test Code (replaces validStyle() call)
+    if (!$cvvValid|| $('#cvv').val() == "") {
+      $('#cvv').css('border-color', 'red');
+    } else {
+      $('#cvv').css('border-color', '');
+    }
+    // test Code (replaces preventSub() call)
+    $('form').submit(function(event) {
+      if (!$cvvValid) {
+        event.preventDefault();
+      }
+      else {
+        return true;
+      }
+    });
+    //validStyle($cvvValid, $('#cvv'));
+    //preventSub($cvvValid);
+  } else {
+      alert('Please select payment method');
+  }
+});
+
+//$('#credit-card').on('input', function () {
+  //if ($('#payment option[value="credit card"]').is(':selected')) {
+    //validates cc number
+
+  //}
+//});
+
+
+
+/*
+//Form validation
+let $nameValid = false;
+$('#name').on('input', function () {
+  $nameValid = nameReg.test($('#name').val());
+  validStyle($nameValid, $('#name'));
+  preventSub($nameValid);
+
+  //$('button').click(function(event) {
+  //  if (!$nameValid) {
+  //    event.preventDefault();
+  //  }
+  //});
+
+});
+
+let $emailValid = false;
+$('#mail').on('input', function () {
+  $emailValid = emailReg.test($('#mail').val());
+  validStyle($emailValid, $('#mail'));
+  $('button').click(function(event) {
+    if (!$emailValid) {
+      event.preventDefault();
+    }
+  });
+});
+
+//validates cc number
+let $ccValid = false;
+$('#cc-num').on('input', function () {
+  $ccValid = ccReg.test($('#cc-num').val());
+  validStyle($ccValid, $('#cc-num'));
+  $('button').click(function(event) {
+    if (!$ccValid) {
+      event.preventDefault();
+    }
+  });
+});
+
+//validates zipcode
+let $zipValid = false;
+$('#zip').on('input', function () {
+  $zipValid = zipReg.test($('#zip').val());
+  validStyle($zipValid, $('#zip'));
+  $('button').click(function(event) {
+    if (!$zipValid) {
+      event.preventDefault();
+    }
+  });
+});
+//validates cvv
+let $cvvValid = false;
+$('#cvv').on('input', function () {
+  $cvvValid = cvvReg.test($('#cvv').val());
+  validStyle($cvvValid, $('#cvv'));
+  $('button').click(function(event) {
+    if (!$cvvValid) {
+      event.preventDefault();
+    }
+  });
+});
+*/
