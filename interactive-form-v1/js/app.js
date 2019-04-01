@@ -25,15 +25,19 @@ $('#design').on('change', function() {
   $('#color option').hide();
   if($("#design").val() === "heart js") {
     $('#color option[value="tomato"]').show();
+    $('#color option[value="cornflowerblue"]').attr('selected', false);
     $('#color option[value="tomato"]').attr('selected', true);
     $('#color option[value="steelblue"]').show();
     $('#color option[value="dimgrey"]').show();
   } else if ($("#design").val() === "js puns") {
     //$('#color option').hide();
     $('#color option[value="cornflowerblue"]').show();
+    $('#color option[value="tomato"]').attr('selected', false);
     $('#color option[value="cornflowerblue"]').attr('selected', true);
     $('#color option[value="darkslategrey"]').show();
     $('#color option[value="gold"]').show();
+  } else {
+    $('#colors-js-puns').hide();
   }
 });
 /*
@@ -170,11 +174,17 @@ function preventSub(validator) {
   });
 };
 
+let $actMessage = $('<label>Please select at least one activity.</label>');
+
 $('button').click(function(event) {
   if ($('label input:checked').length === 0) {
     event.preventDefault();
-    $('.activities').css('background-color', 'red');
-    //alert('Please ensure that you have checked at least one activity box and entered a valid name and email address.');
+    //$('.activities').css('background-color', 'red');
+    $('.activities').prepend($actMessage);
+    $actMessage.css({'background-color': 'red', 'display': 'inline', 'color': 'white', 'border-radius': '3px', 'margin-bottom': '5px'});
+  } else {
+    $actMessage.detach();
+    //$('.activities').css('background-color', '');
   }
   if ($('#name').val()==='') {
     event.preventDefault();
@@ -183,6 +193,20 @@ $('button').click(function(event) {
   if ($('#mail').val()==='') {
     event.preventDefault();
     $('#mail').css('border-color', 'red');
+  }
+  if ($('#payment option[value="credit card"]').is(':selected')) {
+      if ($('#cc-num').val()==='') {
+        event.preventDefault();
+        $('#cc-num').css('border-color', 'red');
+      }
+      if ($('#zip').val()==='') {
+        event.preventDefault();
+        $('#zip').css('border-color', 'red');
+      }
+      if ($('#cvv').val()==='') {
+        event.preventDefault();
+        $('#cvv').css('border-color', 'red');
+      }
   }
   else {
     return true;
@@ -208,19 +232,23 @@ $('#name').on('input', function () {
       return true;
     }
   });
-
-  //validStyle($nameValid, $('#name'));
-  //preventSub($nameValid);
 });
-
+let $emailMessage = $('<label>Please enter email.</label>');
 let $emailValid = false;
+$('#mail').one('focus', function () {
+  $('#mail').before($emailMessage);
+  $emailMessage.css({'background-color': 'red', 'display': 'inline',
+    'color': 'white', 'border-radius': '3px', 'margin-bottom': '5px'});
+});
 $('#mail').on('input', function () {
   $emailValid = emailReg.test($('#mail').val());
   // test Code (replaces validStyle() call)
   if (!$emailValid|| $('#mail').val() == "") {
     $('#mail').css('border-color', 'red');
+    $emailMessage.text('Please properly format email (i.e. "name@example.com").');
   } else {
     $('#mail').css('border-color', '');
+    $emailMessage.html('<label></label>');
   }
   // test Code (replaces preventSub() call)
   $('form').submit(function(event) {
@@ -231,20 +259,21 @@ $('#mail').on('input', function () {
       return true;
     }
   });
-
-  //validStyle($emailValid, $('#mail'));
-  //preventSub($emailValid);
 });
 
 let $activitiesValid = false;
-$('label input').on('input', function () {
+$('label input').on('change', function () {
   if ($('label input:checked').length === 0) {
-    $('.activities').css('background-color', 'red');
+    //$('.activities').css('background-color', 'red');
+    $('.activities').prepend($actMessage);
+    $actMessage.css({'background-color': 'red', 'display': 'inline', 'color': 'white', 'border-radius': '3px', 'margin-bottom': '5px'});
   } else {
-    $('.activities').css('background-color', '');
+    //$('.activities').css('background-color', '');
+    $actMessage.detach();
     $activitiesValid = true;
   }
   preventSub($activitiesValid);
+
 });
 
 let $ccValid = false;
@@ -266,8 +295,6 @@ $('#cc-num').on('input', function () {
         return true;
       }
     });
-    //validStyle($ccValid, $('#cc-num'));
-    //preventSub($ccValid);
   }
   else {
     alert('Please select payment method');
@@ -293,8 +320,6 @@ $('#zip').on('input', function () {
         return true;
       }
     });
-    //validStyle($zipValid, $('#zip'));
-    //preventSub($zipValid);
   } else {
       alert('Please select payment method');
   }
@@ -319,8 +344,6 @@ $('#cvv').on('input', function () {
         return true;
       }
     });
-    //validStyle($cvvValid, $('#cvv'));
-    //preventSub($cvvValid);
   } else {
       alert('Please select payment method');
   }
